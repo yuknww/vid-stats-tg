@@ -1,14 +1,20 @@
 import asyncio
+import logging
 
-from aiogram import Bot, Dispatcher
+from app.config import dp, bot
+from app.handlers import router
+from app.load_data import load_json_to_db
+from app.db import on_startup
 
-from config import BOT_TOKEN
-
-bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher()
+logging.basicConfig(level=logging.INFO)
+dp.include_router(router)
 
 async def main():
+    """ При запуске создаёт пул соединений, загружает данные в БД и запускает бота """
+
     try:
+        await on_startup()
+        await load_json_to_db()
         await dp.start_polling(bot)
     finally:
         await bot.session.close()
