@@ -1,16 +1,19 @@
+from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
-from api import llm_generate_sql
-from db import execute_sql
-from main import dp
+from app.api import llm_generate_sql
+from app.db import execute_sql
 
-@dp.message(Command("start"))
+router = Router()
+
+@router.message(Command("start"))
 async def cmd_start(message: Message):
     await message.answer("Привет! Я бот аналитики видео. Напишите Ваш вопрос.")
 
-@dp.message()
+@router.message()
 async def handler(message: Message):
+    """ Слушает все текстовые сообщения и обрабатывает запрос """
     user_question = message.text
 
     sql = await llm_generate_sql(user_question)
