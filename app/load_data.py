@@ -9,6 +9,7 @@ from app.models import Video, VideoSnapshot
 JSON_FILE = "videos.json"
 
 async def load_json_to_db():
+    """ Загружает данные в бд """
     async with async_session() as session:
         async with session.begin():
             async with engine.begin() as conn:
